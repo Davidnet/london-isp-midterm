@@ -1,0 +1,12 @@
+[submodule "ex1"]
+	path = ex1
+	url = git@github.com:Davidnet/london-isp-midterm-ex1.git
+[submodule "ex2complete"]
+	path = ex2complete
+	url = git@github.com:Davidnet/london-isp-midterm-ex2complete.git
+[submodule "ex3"]
+	path = ex3
+	url = git@github.com:Davidnet/london-isp-midterm-ex3.git
+[submodule "ex4"]
+	path = ex4
+	url = git@github.com:Davidnet/london-isp-midterm-ex4.git
