@@ -1,110 +1,102 @@
-# Intelligent Signal Processing Midterm — Video Demonstration Script (v2)
+# Intelligent Signal Processing Midterm — Video Demonstration Script (v4)
 
-**Target Duration:** ~6 minutes  
-**Format:** Screencast with voice narration  
+**Target Duration:** ~5:40 (hard cap 6:00 — assume the marker stops watching there)
+**Format:** Screencast with voice narration
 **Scoring target:** 5/5 — "Excellent video demonstration of all exercises with appropriate voice narration and core code walkthrough."
+**Balance:** each exercise = a rapid, jump-cut **Run** beat (proof the app works) + a longer **Code** walkthrough (~half the section). The narration explains implementation decisions, not just what's on screen.
 
 > [!TIP]
-> **Recording tips:** Use OBS or QuickTime screen recording. Keep the browser, editor, and terminal visible side-by-side where possible. Rehearse once before recording so transitions are smooth.
+> **Recording setup:**
+> - The running apps are demoed on Coursera: the two web apps via their static-page links (the same links included in the report), exercises 3 & 4 via their Coursera Jupyter links. Open and sign in to every tab **before** recording.
+> - Code walkthroughs come from the **local clone** in your editor (ex1/ex2 source files); for exercises 3 & 4 the code is walked through directly in the Coursera notebook cells.
+> - Pre-run all three notebooks on Coursera beforehand so outputs, the recovered-audio files and the model cache already exist; during recording only re-run the key cells.
+> - Record with OBS capturing **system audio + microphone** (QuickTime alone does not capture app audio — on macOS route it through BlackHole/Loopback). The marker must *hear* the CAPTCHA, the effects and the decoded code.
+> - Pause narration whenever the audio itself is the evidence (the CAPTCHA words, the decoded "1891").
+> - Keep the Run beats moving — jump-cut between actions; the saved seconds belong to the code.
 
 ---
 
-## [0:00 – 0:15] Introduction
+## [0:00 – 0:15] (15 s) Introduction
 
-**Visual:** Terminal in the repo root. Briefly show `ls` output with `ex1/`, `ex2complete/`, `ex3/`, `ex4/`.
+**Visual:** Browser with the four Coursera exercise tabs; the local repo open in the editor behind it.
 
-**Voice-over:**  
-"Hello, this is my video demonstration for the Intelligent Signal Processing midterm. The project is organized as four Git submodules — one per exercise. I'll demonstrate each application running, walk through the core logic, and show the results."
-
----
-
-## [0:15 – 1:30] Exercise 1 — Ferric FX: Web Audio Effects Processor
-
-**Visual:**  
-1. In `ex1/`, start the local server (e.g. `npx serve .` or the static server in `.claude/`). Open the app in Chrome — it shows "CLICK TO POWER ON".
-2. Click to power on. Select a sound from the **library dock** at the bottom — show the six pre-loaded cards.
-3. Adjust effects: drag the **Low-Pass cutoff** knob down to ~400 Hz — point out that the *Spectrum Out* display loses the high-frequency content. Toggle the **Waveshaper** on and increase drive — show harmonics reappearing above the cutoff in the output spectrum.
-4. Toggle **Compressor** and **Reverb** on. Show the **DRY/WET** and **OUT LVL** faders. Show the **bypass toggle** on a stage.
-5. Click the **REC** button (top-right). Let it bounce a few seconds, click **STOP**. In the capture dialog, preview the take, rename it, and click **Save to Library**. Show the new card appearing in the dock with its baked-in effects label (e.g. "LPF · WSH · RVB").
-6. On that new card, demonstrate **EDIT** (loads config into the editor), **CLR** (resets to dry), and **DEL** (removes the card).
-7. Briefly switch to the editor showing [audioEngine.js](file:///Users/davidgf/Documents/london-isp-midterm/ex1/src/audioEngine.js). Scroll to the `init()` function.
-
-**Voice-over:**  
-"For Exercise 1, I built Ferric FX, a web-based audio effects processor using `p5.js` and `p5.sound`. 
-Here, we can load a pre-recorded sound and apply a fixed processing chain. As you can see, I can adjust the low-pass filter cutoff, add waveshaper distortion to create new spectral harmonics, and add reverb. The spectrum analysers update in real-time. 
-I can also record the processed audio and save it as a WAV file, or save my current effects configuration as a preset in the sounds library.
-Looking at the core logic in `audioEngine.js`, the effects are disconnected from the main output and wired in series from the low-pass filter down to the master gain. The bypass toggle simply sets the dry/wet mix to zero rather than rewiring the graph, ensuring smooth transitions."
+**Voice-over:**
+"Hello — this is my video demonstration for the Intelligent Signal Processing midterm. For each exercise I'll show the application running on Coursera, then spend most of the time in the code that makes it work."
 
 ---
 
-## [1:30 – 3:00] Exercise 2 — Audio CAPTCHA, Meyda Visualisation & Voice Controller
+## [0:15 – 1:30] (75 s) Exercise 1 — Ferric FX: Web Audio Effects Processor
 
-**Visual:**  
-1. Open the Exercise 2.1 audio CAPTCHA app (in `ex2complete/london-isp-midterm-ex2/app/`). Click play — the CAPTCHA speaks five word–digit pairs (e.g. "apple nine, blue three, …"). Three target words are displayed on screen. Type the corresponding digits and submit. Show the "PASS" result.
-2. Switch to the Exercise 2.2/2.3 visualisation app (`ex2complete/london-isp-midterm-ex223/`). Start the local server.
-3. Select **Ex2_sound1.wav** and press Play — show the "Ripple pond" visualization with concentric rings breathing with loudness and onset ripples.
-4. Switch to **Ex2_sound2.wav** — show the "Particle burst field" with colour and size reacting dynamically.
-5. Switch to **Kalte_Ohren_(Remix).mp3** — show the "Figure field" visualisation. Point out the real-time feature readout (top-left corner showing rms, spectralCentroid, spectralFlatness, zcr, spectralFlux values).
-6. Click the **VOICE · OFF** chip to enable the microphone. Speak: **"red"** → background changes. **"triangle"** → figures change shape. **"bigger"** → figures scale up. **"trails"** → motion blur appears. **"reset"** → clears all overrides.
-7. Briefly show [sketch.js](file:///Users/davidgf/Documents/london-isp-midterm/ex2complete/london-isp-midterm-ex223/sketch.js) — highlight the Meyda analyzer callback and the `handleVoiceCommand()` function.
+**Run — Coursera tab (~25 s, jump-cut):**
+1. "CLICK TO POWER ON" → power on, pick a library card (six pre-loaded). Tap play/pause, loop, skip-to-start; nudge MASTER VOLUME.
+2. Low-Pass CUTOFF down to ~400 Hz → *Spectrum Out* loses the highs; Waveshaper on, DRIVE up → harmonics reappear.
+3. REC → bounce a few seconds → STOP → in the dialog: **EXPORT WAV** (show the `.wav` download) + **ADD TO LIBRARY** → new card ("LPF · WSH · RVB") → EDIT / CLR / DEL in quick succession.
 
-**Voice-over:**  
-"Exercise 2 has three tasks. First, the audio CAPTCHA: it speaks five word–digit pairs using `p5.speech` with randomized voice, pitch, and rate. A masking layer of band-passed pink noise and brown noise runs underneath, amplitude-modulated to resist automated scraping. The user must type the digit that follows each of the three displayed target words.
+**Code — local editor, `ex1/src/audioEngine.js` (~45 s):**
+1. `init()`: the `disconnect()` loop over the four effects, then the series wiring `lowpass → waveshaper → compressor → reverb → masterGain → output`.
+2. The two analysers: `fftIn` on the source, `fftOut.setInput(nodes.masterGain)` — the in/out spectra.
+3. `recorder.setInput(nodes.masterGain)` — REC captures the *processed* bus.
+4. The bypass branch: `node.drywet(0); node.amp(1)` — contrast with the active branch above it.
+5. Flash `src/persistence.js`: the localStorage library index and the WAV-encoded blobs in IndexedDB.
 
-Next is the Meyda-driven audio visualisation. Feature selection was measured, not guessed — I ran an offline analysis with librosa to compute each feature's coefficient of variation and mapped the features with the largest swing per sound. For example, Sound 2 has an RMS CV of 1.15 and centroid CV of 1.26, so centroid drives particle colour from dark cyan to hot magenta, and RMS drives emission rate. The spectral flux is derived from consecutive amplitude spectra since Meyda's streaming analyzer can't compute it directly — a spike 1.8× above the running baseline triggers an onset event.
-
-The voice controller uses `p5.SpeechRec` in continuous mode. It scans each utterance word-by-word for keywords — background colours, shape names, transport commands, volume, speed, scale, and trail effects — with homophones accepted. Saying 'red triangle' immediately overrides the background colour and figure shape."
-
----
-
-## [3:00 – 4:20] Exercise 3 — Audio Steganography (Python)
-
-**Visual:**  
-1. Open `ex3/app/Ex3_walkthrough.ipynb` in Jupyter. Run the cells — show:
-   - The energy table flagging `Ex3_sound4.wav` with 10.86% ultrasonic energy at a peak of 19,001 Hz.
-   - The spectrogram showing the AM carrier and symmetric sidebands above 18 kHz.
-   - The demodulated output — play the recovered audio that speaks **"1891"**.
-2. Switch to `ex3/app/Ex3_2_walkthrough.ipynb`. Run the cells — show:
-   - The embedding of the message *"It always seems impossible until it's done"* into `Ex3_sound5.wav`: 184 of 407,280 samples used, 132 changed, each by at most ±3.
-   - The cover vs. stego spectra overlay — they coincide perfectly.
-   - Extraction with the correct key recovering the exact message.
-   - Extraction with a wrong key failing on invalid UTF-8.
-
-**Voice-over:**  
-"Exercise 3 investigates audio steganography in Python. In Task 3.1, four WAV files may hide a secret code that was amplitude-modulated onto an ultrasonic carrier and mixed into a normal recording. My detector measures the fraction of spectral energy above 18 kHz for each file. `Ex3_sound4.wav` has 10.86% of its energy there — far above the others — peaking at exactly 19,001 Hz. The spectrogram confirms the AM fingerprint: a carrier line flanked by symmetric sidebands.
-
-To decode, I band-pass around the carrier, apply Hilbert envelope detection to strip the carrier oscillation, and low-pass back to baseband. The recovered signal is intelligible speech: the code is 1891.
-
-In Task 3.2, I implemented a key-based LSB embedding scheme. A single integer key seeds a pseudo-random permutation of sample indices, scattering the secret bits across non-consecutive samples. Each selected sample carries two least-significant bits, and a 32-bit length header makes extraction self-contained. The embedding altered only 132 samples out of 407,280, each by at most ±3 out of 65,536 — well below the threshold of hearing. With the correct key, the message is recovered exactly; a wrong key selects wrong samples and decoding fails."
+**Voice-over:**
+"Exercise 1 is Ferric FX, built with p5.js and p5.sound. Quickly, the app: transport, the low-pass stripping the highs from the output spectrum, the waveshaper adding new harmonics back, and a take recorded, exported as WAV, and saved to the library for editing, clearing or deleting.
+Now the core code. Every p5.sound effect auto-connects to the speakers, so `init()` first disconnects each node, then wires the fixed series chain: low-pass, waveshaper, compressor, reverb, master gain. Two FFTs tap the chain — the source and the master gain — giving the in and out spectra, and the recorder taps the master gain too, so it captures the processed signal. Bypass never rewires the graph: it sets a stage's dry/wet to zero at unity gain. Persistence is two layers — the library index in localStorage, the audio WAV-encoded into IndexedDB — so everything survives a reload."
 
 ---
 
-## [4:20 – 5:40] Exercise 4 — Offline Multilingual ASR
+## [1:30 – 2:55] (85 s) Exercise 2 — Audio CAPTCHA, Meyda Visualisation & Voice Controller
 
-**Visual:**  
-1. In the terminal, navigate to `ex4/`. Run `./launch.sh` to build and start the Docker container (Python 3.7 environment). Show it completing.
-2. Execute the Jupyter notebook `ex4/asr-project/Exercise 4.ipynb` inside the container. Show:
-   - The version-pinned installation of `sherpa-onnx` 1.9.30 and `onnxruntime` 1.14.1.
-   - The three model bundles loading from local disk (Zipformer for English, Kroko for Spanish and Italian).
-   - The preprocessing chain output: show the before/after waveform plot from the report (high-pass filter removing rumble below 80 Hz, RMS normalization).
-   - The per-file WER results printing: English corpus WER 14.7%, Spanish 0.0%, Italian 0.0%.
-   - The two personal recordings (`own_sentence1.wav`, `own_sentence2.wav`) both achieving 0% WER.
-3. Briefly show the preprocessing code in the notebook — the `sosfiltfilt` high-pass and RMS normalization.
+**Run — Coursera tab (~30 s, jump-cut):**
+1. CAPTCHA: play — **let the first two word–digit pairs be heard** (pause narration), point at the pulsing scope — jump-cut to the three answers filled → **"Verified · Human"**.
+2. Visualiser: flick through **Ex2_sound1** "Ripple pond" → **Ex2_sound2** "Particle burst field" → **Ex2_sound3** "Spark shower" (a beat each, feature readout visible top-left).
+3. **Kalte_Ohren_(Remix).mp3** "Figure field": VOICE chip on → say **"red"** → background changes; **"triangle"** → figures re-render.
 
-**Voice-over:**  
-"Exercise 4 is an offline multilingual speech interface for an airport virtual assistant. It runs inside a Docker container with Python 3.7 to match the module's Coursera environment. I chose `sherpa-onnx` over the deprecated Mozilla DeepSpeech because it's actively maintained and runs entirely offline on CPU.
+**Code — local editor (~50 s):**
+1. `ex2complete/london-isp-midterm-ex2/app/js/challenge.js`: three targets + two fillers → the five spoken pairs.
+2. `app/js/audio.js`: the per-word randomised `pitch` / `rate` / `voiceIndex`; the noise bed — pink noise → band-pass at 1.4 kHz, brown noise → low-pass rumble; `updateNoiseAmp()` amplitude-modulating the mask in sync with the words.
+3. `ex2complete/london-isp-midterm-ex223/sketch.js`: the Meyda analyzer callback — the flux loop summing positive deltas between `spec` and `prevSpectrum`; the onset line `fluxN > fluxBaseline * 1.8`.
+4. `handleVoiceCommand()`: the word-by-word scan over `VOICE_COLORS` / `VOICE_SHAPES`, latest keyword per category wins.
 
-The system uses a streaming Zipformer transducer for English and Kroko transducers for Spanish and Italian, all with int8-quantized weights for efficiency on kiosk hardware. Each language gets its own `OnlineRecognizer` with greedy-search decoding.
-
-To handle the noisy airport environment, every utterance passes through a three-stage preprocessing chain: first, an order-4 zero-phase Butterworth high-pass at 80 Hz removes low-frequency rumble below the fundamental of adult speech; second, RMS normalization to −20 dBFS standardizes speaker volume; third, a 0.8-second low-amplitude lead-in pad lets the streaming decoder's state settle before the first phoneme.
-
-Spanish and Italian are recognized perfectly at 0% WER. English has a corpus WER of 14.7% — the remaining errors are vocabulary-level confusions like 'check-in desk' decoding as 'chicken desk', which are limitations of the compact streaming model, not noise. Both personal recordings also achieve 0% WER after preprocessing."
+**Voice-over:**
+"Exercise 2. The CAPTCHA speaks five word–digit pairs — listen — [pause] (≈8 s) — and you type the digit that followed each of the three displayed words. In the code, every pair — three targets, two decoys — gets a randomly chosen voice, pitch and speaking rate, while a masking bed of band-passed pink noise and brown-noise rumble runs underneath, amplitude-modulated in sync with the words, so a bot can't subtract a static background.
+The visualiser's features come from an offline librosa analysis — the highest-variance features per sound drive each mapping. In the Meyda callback, streaming Meyda can't compute spectral flux, so I sum the positive differences between consecutive amplitude spectra; a spike one-point-eight times above its running baseline is an onset and spawns ripples, sparks or bursts. The voice controller scans each utterance word by word — five colours, four shapes, plus transport, volume, scale and trails — and the latest keyword per category wins."
 
 ---
 
-## [5:40 – 6:00] Conclusion
+## [2:55 – 4:10] (75 s) Exercise 3 — Audio Steganography (Python)
 
-**Visual:** Show the WER summary table from the notebook output, or the Ferric FX interface.
+**Run + code — Coursera Jupyter, Exercise 3.1 notebook (pre-run) (~40 s):**
+1. The detection cell + **energy table**: `Ex3_sound4.wav` flagged — **10.86%** above 18 kHz, peak **19,001 Hz**. Glance at the spectrum zoom (carrier + symmetric sidebands) and the spectrogram (burst above the cyan 18 kHz line).
+2. Walk the **`demodulate()` cell** line by line — band-pass → `hilbert()` envelope → low-pass — re-run it and the playback cell, and **play the recovered audio: pause narration so "1891" is clearly audible**.
 
-**Voice-over:**  
-"To summarize: Exercise 1 implements a full audio effects processor with recording and a persistent sounds library. Exercise 2 combines a robust audio CAPTCHA with data-driven Meyda visualizations and a voice controller. Exercise 3 detects an ultrasonic AM-hidden code and implements a key-secured LSB embedding scheme. And Exercise 4 deploys an offline multilingual ASR system with noise-robust preprocessing. Thank you for watching."
+**Run + code — Exercise 3.2 notebook (~35 s):**
+3. Walk the embed cells: `KEY`, `N_LSB = 2`, `HEADER_BITS = 32`; `_key_order()` — `random.Random(key).shuffle(order)`. Re-run: **184 of 407,280 samples used, 132 changed, max ±3**; the waveform plot with modified samples in red.
+4. The extraction cell: correct key → exact message; wrong key → *"decoding failed (invalid UTF-8)"* in the `try/except`.
+
+**Voice-over:**
+"Exercise 3, in the Coursera notebooks. Detection is one function: the fraction of spectral energy at or above 18 kilohertz. Sound 4 holds 10.86 percent — peaking at 19,001 hertz — and the spectrum zoom shows a carrier with symmetric sidebands, the AM fingerprint, with the burst visible in the spectrogram. `demodulate()` reverses it in three steps you can read right here: a band-pass isolates the carrier, the Hilbert envelope strips the oscillation, and a low-pass returns the message to baseband. Listen — [pause] (≈4 s) — 1891.
+Task 3.2: a single integer key seeds a pseudo-random shuffle of all sample indices, and the message rides two least-significant bits per selected sample behind a 32-bit length header, so extraction is self-contained. Running it: 184 of 407,280 samples used, only 132 actually change, none by more than plus-or-minus 3 out of 65,536. The correct key recovers the message exactly; a wrong key lands on the wrong samples and fails on invalid UTF-8."
+
+---
+
+## [4:10 – 5:25] (75 s) Exercise 4 — Offline Multilingual ASR
+
+**Run + code — Coursera Jupyter, Exercise 4.ipynb (pre-run) (~75 s):**
+1. Glance: the version-pinned install cell (`sherpa-onnx==1.9.30`, `onnxruntime==1.14.1`) and the model bundles resolving from local disk.
+2. Walk `build_recognizer()` — `OnlineRecognizer.from_transducer(..., decoding_method="greedy_search", provider="cpu")` — and the `recognizers = {lang: …}` dictionary: language selection is a lookup.
+3. Walk **`preprocess()`**: `butter(4, 80, "highpass", output="sos")` + `sosfiltfilt` (zero-phase), `rms_normalize` to −20 dBFS, the 0.8 s lead-in pad.
+4. Glance at `wer()` — the word-level Levenshtein counting S/D/I.
+5. Re-run the evaluation summary cell if fast, else scroll its output: per-file table — **English corpus 14.7%, Spanish 0.0%, Italian 0.0%**, personal recordings **0%**. *(If you rename the recordings to `your_sentence1/2.wav` per the brief before recording, re-run first so the table shows the required names.)*
+
+**Voice-over:**
+"Exercise 4, the airport assistant, in the module's Python 3.7 Coursera environment. sherpa-onnx replaces the archived Mozilla DeepSpeech — actively maintained, and fully offline on CPU. In the code, language selection is a dictionary: each language maps to its own OnlineRecognizer built with from_transducer, greedy search on the CPU provider, over int8-quantised bundles — a streaming Zipformer for English, Kroko for Spanish and Italian. preprocess() handles the noisy concourse in three stages you can read here: an order-4 Butterworth high-pass at 80 hertz, run forwards and backwards with sosfiltfilt so it's zero-phase; RMS normalisation to minus 20 dBFS; and a lead-in pad that settles the streaming decoder before the first phoneme. wer() aligns hypothesis and reference with a word-level Levenshtein, counting substitutions, deletions and insertions. The results: Spanish and Italian at zero percent, English at 14.7 — vocabulary confusions like 'check-in desk' becoming 'chicken desk' — and both of my own recordings at zero."
+
+---
+
+## [5:25 – 5:40] (15 s) Conclusion
+
+**Visual:** The WER summary output, or the Ferric FX interface.
+
+**Voice-over:**
+"That's the four exercises — an effects chain built once and never rewired, a synthesised and masked CAPTCHA, feature-driven visuals under voice control, key-scattered LSB steganography, and offline multilingual recognition. Thanks for watching."
